@@ -9,15 +9,16 @@ namespace FWO.EventSourcing.Core.Domain
 
         public string Id { get => _id; }
 
-        public int Version { get; set; } = -1;
+        public int Version { get; private set; } = -1;
 
         public IEnumerable<BaseEvent> GetUncommittedChanges()
         {
             return _changes;
         }
 
-        public void MarkChangesAsCommitted()
+        public void CommitChanges()
         {
+            Version += _changes.Count();
             _changes.Clear();
         }
 
@@ -32,9 +33,9 @@ namespace FWO.EventSourcing.Core.Domain
 
             method.Invoke(this, new object[] { @event });
             if (isNew)
-            {
                 _changes.Add(@event);
-            }
+            else
+                Version++;
         }
 
         protected void RaiseEvent(BaseEvent @event)
@@ -42,8 +43,10 @@ namespace FWO.EventSourcing.Core.Domain
             ApplyChange(@event, true);
         }
 
-        public void ReplayEvents(IEnumerable<BaseEvent> events)
+        public void LoadEvents(IEnumerable<BaseEvent> events, string aggregateId)
         {
+            _id = aggregateId;
+            Version = -1;
             foreach (var @event in events)
             {
                 ApplyChange(@event, false);
