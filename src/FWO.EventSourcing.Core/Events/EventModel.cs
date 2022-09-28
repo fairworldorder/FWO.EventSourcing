@@ -27,6 +27,6 @@ namespace FWO.EventSourcing.Core.Events
         public string EventType { get; set; }
 
         [JsonProperty("eventData")]
-        public BaseEvent EventData { get; set; }
+        public dynamic EventData { get; set; }
     }
 }
