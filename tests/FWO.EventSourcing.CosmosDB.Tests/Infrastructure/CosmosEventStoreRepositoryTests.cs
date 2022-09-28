@@ -1,17 +1,20 @@
 ﻿using FWO.EventSourcing.Core.Events;
-using FWO.EventSourcing.CosmosDB.Tests.Data;
-using FWO.EventSourcing.CosmosDB.Tests.Events;
+using FWO.EventSourcing.CosmosDB.Tests.TestEvents;
+using FWO.EventSourcing.CosmosDB.Tests.TestHelpers;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
 {
-    public class CosmosEventStoreRepositoryTests
+    public class CosmosEventStoreRepositoryTests : IDisposable
     {
         private CosmosEventStoreRepositoryBuilder _builder;
+        private EventModelListBuilder _eventModelListBuilder;
 
         public CosmosEventStoreRepositoryTests()
         {
             _builder = new CosmosEventStoreRepositoryBuilder();
+            _eventModelListBuilder = new EventModelListBuilder();
         }
 
         [Fact]
@@ -30,8 +33,8 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
                     FirstName = "John",
                     LastName = "Doe",
                     Id = Guid.NewGuid().ToString(),
-                    Type = nameof(StartedEvent),
-                    Version = 0
+                    //Type = nameof(StartedEvent),
+                    //Version = 0
                 }
             };
 
@@ -42,84 +45,45 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
         public async Task Expect_LoadByAggregateIdAsync()
         {
             var sut = _builder.Build();
-            var aggregateId = Guid.NewGuid().ToString();
+            var eventModels = _eventModelListBuilder.SetDefault().Build();
 
-            var startedEvent = new StartedEvent
+            foreach(var eventModel in eventModels)
             {
-                FirstName = "John",
-                LastName = "Doe",
-                Id = Guid.NewGuid().ToString(),
-                Type = nameof(StartedEvent),
-                Version = 0,
-            };
-            await sut.SaveAsync(new EventModel
-            {
-                Id = $"{aggregateId}_0",
-                AggregateId = aggregateId,
-                AggregateType = "TestAggregate",
-                EventType = nameof(StartedEvent),
-                EventData = startedEvent,
-                Timestamp = DateTime.UtcNow,
-                Version = 0
-            });
+                await sut.SaveAsync(eventModel);
+            }
 
-            var modifiedEvent = new ModifiedEvent
-            {
-                FirstName = "Joe",
-                LastName = "Schmoe",
-                Id = Guid.NewGuid().ToString(),
-                Type = nameof(ModifiedEvent),
-                Version = 1
-            };
-            await sut.SaveAsync(new EventModel
-            {
-                Id = $"{aggregateId}_1",
-                AggregateId = aggregateId,
-                AggregateType = "TestAggregate",
-                EventType = nameof(ModifiedEvent),
-                EventData = modifiedEvent,
-                Version = 1
-            });
-
-            var deletedEvent = new DeletedEvent
-            {
-                Id = Guid.NewGuid().ToString(),
-                Type = nameof(DeletedEvent),
-                Version = 2
-            };
-            await sut.SaveAsync(new EventModel
-            {
-                Id = $"{aggregateId}_2",
-                AggregateId = aggregateId,
-                AggregateType = "TestAggregate",
-                EventType = nameof(DeletedEvent),
-                EventData = deletedEvent,
-                 Version = 2
-            });
-
+            string aggregateId = eventModels[0].AggregateId;
 
             var events = await sut.LoadByAggregateIdAsync(aggregateId);
 
             Assert.Collection(events,
                 ev =>
                 {
-                    Assert.Equal(nameof(StartedEvent), ev.EventType);
-                    Assert.Equal(0, ev.Version);
-                    Assert.Equal(startedEvent.FirstName, ((StartedEvent)ev.EventData).FirstName);
-                    Assert.Equal(startedEvent.LastName, ((StartedEvent)ev.EventData).LastName);
+                    var @event = ((JObject)ev.EventData).ToObject<StartedEvent>();
+                    //Assert.Equal(nameof(StartedEvent), @event.Type);
+                    //Assert.Equal(0, @event.Version);
+                    Assert.Equal(eventModels[0].EventData.FirstName, @event.FirstName);
+                    Assert.Equal(eventModels[0].EventData.LastName, @event.LastName);
                 },
                 ev =>
                 {
-                    Assert.Equal(nameof(StartedEvent), ev.EventType);
-                    Assert.Equal(1, ev.Version);
-                    Assert.Equal(modifiedEvent.FirstName, ((StartedEvent)ev.EventData).FirstName);
-                    Assert.Equal(modifiedEvent.LastName, ((StartedEvent)ev.EventData).LastName);
+                    var @event = ((JObject)ev.EventData).ToObject<ModifiedEvent>();
+                    //Assert.Equal(nameof(ModifiedEvent), @event.Type);
+                    //Assert.Equal(1, @event.Version);
+                    Assert.Equal(eventModels[1].EventData.FirstName, @event.FirstName);
+                    Assert.Equal(eventModels[1].EventData.LastName, @event.LastName);
                 },
                 ev =>
                 {
-                    Assert.Equal(nameof(DeletedEvent), ev.EventType);
-                    Assert.Equal(2, ev.Version);
+                    var @event = ((JObject)ev.EventData).ToObject<DeletedEvent>();
+                    //Assert.Equal(nameof(DeletedEvent), @event.Type);
+                    //Assert.Equal(2, @event.Version);
                 });
+        }
+
+        public void Dispose()
+        {
+            _builder.Dispose();
         }
     }
 }

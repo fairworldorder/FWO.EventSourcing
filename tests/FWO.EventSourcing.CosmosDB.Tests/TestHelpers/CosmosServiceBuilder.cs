@@ -3,7 +3,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace FWO.EventSourcing.CosmosDB.Tests.Data
+namespace FWO.EventSourcing.CosmosDB.Tests.TestHelpers
 {
     public class CosmosServiceBuilder : IDisposable
     {

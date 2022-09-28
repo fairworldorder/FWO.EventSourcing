@@ -1,7 +1,7 @@
 ﻿using FWO.EventSourcing.Core.Events;
 using Newtonsoft.Json;
 
-namespace FWO.EventSourcing.CosmosDB.Tests.Events
+namespace FWO.EventSourcing.CosmosDB.Tests.TestEvents
 {
     public class StartedEvent : BaseEvent
     {

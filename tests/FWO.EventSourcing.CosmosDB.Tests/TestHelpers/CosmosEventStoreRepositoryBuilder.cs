@@ -1,6 +1,6 @@
 ﻿using FWO.EventSourcing.CosmosDB.Infrastructure;
 
-namespace FWO.EventSourcing.CosmosDB.Tests.Data
+namespace FWO.EventSourcing.CosmosDB.Tests.TestHelpers
 {
     public class CosmosEventStoreRepositoryBuilder : IDisposable
     {
@@ -21,7 +21,7 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Data
 
         public void Dispose()
         {
-            //_cosmosServiceBuilder.Dispose();
+            _cosmosServiceBuilder.Dispose();
         }
     }
 }
