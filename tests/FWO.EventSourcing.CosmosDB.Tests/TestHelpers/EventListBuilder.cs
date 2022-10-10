@@ -45,13 +45,14 @@ namespace FWO.EventSourcing.CosmosDB.Tests.TestHelpers
             return this;
         }
 
-        public EventListBuilder AddStartedEvent(string firstName, string lastName)
+        public EventListBuilder AddStartedEvent(string firstName, string lastName, DateTime dateOfBirth)
         {
             _events.Add(new StartedEvent
             {
                 Id = Guid.NewGuid().ToString(),
                 FirstName = firstName,
                 LastName = lastName,
+                DateOfBirth = dateOfBirth,
                 //Type = nameof(StartedEvent)
             });
 

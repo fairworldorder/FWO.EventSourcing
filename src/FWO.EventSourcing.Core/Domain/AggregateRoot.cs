@@ -5,7 +5,9 @@ namespace FWO.EventSourcing.Core.Domain
     public abstract class AggregateRoot
     {
         protected string _id;
-        private readonly List<BaseEvent> _changes = new();
+
+        private readonly List<BaseEvent> _appliedChanges = new();
+        private readonly List<BaseEvent> _uncommitedChanges = new();
 
         public string Id { get => _id; }
 
@@ -13,13 +15,19 @@ namespace FWO.EventSourcing.Core.Domain
 
         public IEnumerable<BaseEvent> GetUncommittedChanges()
         {
-            return _changes;
+            return _uncommitedChanges;
+        }
+
+        public IEnumerable<BaseEvent> GetAppliedChanges()
+        {
+            return _appliedChanges;
         }
 
         public void CommitChanges()
         {
-            Version += _changes.Count();
-            _changes.Clear();
+            Version += _uncommitedChanges.Count();
+            _appliedChanges.AddRange(_uncommitedChanges);
+            _uncommitedChanges.Clear();
         }
 
         private void ApplyChange(BaseEvent @event, bool isNew)
@@ -33,7 +41,7 @@ namespace FWO.EventSourcing.Core.Domain
 
             method.Invoke(this, new object[] { @event });
             if (isNew)
-                _changes.Add(@event);
+                _uncommitedChanges.Add(@event);
             else
                 Version++;
         }
@@ -49,6 +57,7 @@ namespace FWO.EventSourcing.Core.Domain
             Version = -1;
             foreach (var @event in events)
             {
+                _appliedChanges.Add(@event);
                 ApplyChange(@event, false);
             }
         }

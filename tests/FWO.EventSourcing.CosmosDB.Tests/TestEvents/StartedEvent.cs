@@ -10,5 +10,8 @@ namespace FWO.EventSourcing.CosmosDB.Tests.TestEvents
 
         [JsonProperty("lastName")]
         public string LastName { get; set; }
+
+        [JsonProperty("dateOfBirth")]
+        public DateTime DateOfBirth { get; set; }
     }
 }

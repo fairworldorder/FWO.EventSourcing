@@ -33,6 +33,7 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
                     FirstName = "John",
                     LastName = "Doe",
                     Id = Guid.NewGuid().ToString(),
+                    DateOfBirth = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                     //Type = nameof(StartedEvent),
                     //Version = 0
                 }

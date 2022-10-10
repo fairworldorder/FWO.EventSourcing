@@ -44,7 +44,7 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
             var sut = _eventStoreBuilder.Build();
             var aggregateId = default(Guid).ToString();
             var events = _eventListBuilder
-                .AddStartedEvent("John", "Doe")
+                .AddStartedEvent("John", "Doe", new DateTime(2000,1,1,0,0,0,DateTimeKind.Utc))
                 .AddModifiedEvent("Joe", "Schmoe")
                 .Build();
 
@@ -72,7 +72,7 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
             var sut = _eventStoreBuilder.Build();
             var aggregateId = default(Guid).ToString();
             var events = _eventListBuilder
-                .AddStartedEvent("John", "Doe")
+                .AddStartedEvent("John", "Doe", new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc))
                 .AddModifiedEvent("Joe", "Schmoe")
                 .Build();
 

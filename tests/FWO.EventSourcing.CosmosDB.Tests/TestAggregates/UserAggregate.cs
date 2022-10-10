@@ -5,8 +5,8 @@ namespace FWO.EventSourcing.CosmosDB.Tests.TestAggregates
 {
     public class UserAggregate : AggregateRoot
     {
-        private string _firstName;
-        private string _lastName;
+        //private string _firstName;
+        //private string _lastName;
         private bool _active;
 
         public UserAggregate()
@@ -57,15 +57,15 @@ namespace FWO.EventSourcing.CosmosDB.Tests.TestAggregates
 
         public void Apply(StartedEvent @event)
         {
-            _firstName = @event.FirstName;
-            _lastName = @event.LastName;
+            //_firstName = @event.FirstName;
+            //_lastName = @event.LastName;
             _active = true;
         }
 
         public void Apply(ModifiedEvent @event)
         {
-            _firstName = @event.FirstName;
-            _lastName = @event.LastName;
+            //_firstName = @event.FirstName;
+            //_lastName = @event.LastName;
         }
 
         public void Apply(DeletedEvent @event)

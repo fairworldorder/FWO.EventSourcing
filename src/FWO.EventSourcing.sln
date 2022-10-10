@@ -5,11 +5,15 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FWO.EventSourcing.Core", "FWO.EventSourcing.Core\FWO.EventSourcing.Core.csproj", "{D5D076A7-1293-4F73-A88F-17A25DF7BA1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FWO.EventSourcing.CosmosDB", "FWO.EventSourcing.CosmosDB\FWO.EventSourcing.CosmosDB.csproj", "{6165AA60-41DE-4837-97AF-0B8D61860408}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FWO.EventSourcing.CosmosDB", "FWO.EventSourcing.CosmosDB\FWO.EventSourcing.CosmosDB.csproj", "{6165AA60-41DE-4837-97AF-0B8D61860408}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DEFE15B7-5809-4780-9280-A697D8343EB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FWO.EventSourcing.CosmosDB.Tests", "..\tests\FWO.EventSourcing.CosmosDB.Tests\FWO.EventSourcing.CosmosDB.Tests.csproj", "{CA0833CF-B650-4200-8022-5586A59DA5A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FWO.EventSourcing.CosmosDB.Tests", "..\tests\FWO.EventSourcing.CosmosDB.Tests\FWO.EventSourcing.CosmosDB.Tests.csproj", "{CA0833CF-B650-4200-8022-5586A59DA5A4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{82DE820A-502F-462B-B285-6DE253DF504D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Example.Todo", "..\examples\WebApi.Example.Todo\WebApi.Example.Todo.csproj", "{0646DCAE-4632-4DA1-8261-17A1E711830E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +33,17 @@ Global
 		{CA0833CF-B650-4200-8022-5586A59DA5A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA0833CF-B650-4200-8022-5586A59DA5A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA0833CF-B650-4200-8022-5586A59DA5A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0646DCAE-4632-4DA1-8261-17A1E711830E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0646DCAE-4632-4DA1-8261-17A1E711830E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0646DCAE-4632-4DA1-8261-17A1E711830E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0646DCAE-4632-4DA1-8261-17A1E711830E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CA0833CF-B650-4200-8022-5586A59DA5A4} = {DEFE15B7-5809-4780-9280-A697D8343EB7}
+		{0646DCAE-4632-4DA1-8261-17A1E711830E} = {82DE820A-502F-462B-B285-6DE253DF504D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BDE4C288-B9D6-4560-9849-F16E727A01BB}
