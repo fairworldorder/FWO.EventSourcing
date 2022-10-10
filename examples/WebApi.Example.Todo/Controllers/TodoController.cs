@@ -27,10 +27,8 @@ namespace WebApi.Example.Controllers
         }
 
         [HttpPost("{userId}")]
-        public async Task<IActionResult> CreateTodo([FromRoute]string userId, [FromBody]CreateTodoRequest request)
+        public async Task<IActionResult> CreateTodo([FromRoute] string userId, [FromBody] CreateTodoRequest request)
         {
-            //var aggregate = new TodoAggregate(userId, request.Data, DateTime.UtcNow);
-
             TodoAggregate aggregate;
             try
             {
@@ -41,13 +39,13 @@ namespace WebApi.Example.Controllers
             {
                 aggregate = new TodoAggregate(userId, request.Data, DateTime.UtcNow);
             }
-            
+
             await _eventSourcingHandler.SaveAsync(aggregate);
             return new OkResult();
         }
 
         [HttpGet("{userId}")]
-        public async Task<AllTodosView> GetTodos([FromRoute]string userId, [FromQuery]bool? active)
+        public async Task<AllTodosView> GetTodos([FromRoute] string userId, [FromQuery] bool? active)
         {
             var results = new List<TodoModel>();
             var aggregate = await _eventSourcingHandler.LoadAggregateByIdAsync(userId);
@@ -63,8 +61,26 @@ namespace WebApi.Example.Controllers
                 view.Todos.RemoveAll(x => x.Active != active);
                 return view;
             }
+        }
 
+        [HttpPost("{userId}/{todoId}")]
+        public async Task<IActionResult> UpdateTodo([FromRoute] string userId, [FromRoute] string todoId, [FromBody] UpdateTodoRequest request)
+        {
+            TodoAggregate aggregate;
+            try
+            {
+                aggregate = await _eventSourcingHandler.LoadAggregateByIdAsync(userId);
+                aggregate.UpdateTodo(todoId, request.Data, request.Active, DateTime.UtcNow);
+                await _eventSourcingHandler.SaveAsync(aggregate);
+            }
+            catch (Exception ex) when (ex is AggregateException
+                                          or AggregateNotFoundException
+                                          or InvalidOperationException)
+            {
+                return NotFound();
+            }
 
+            return Ok();
         }
     }
 }
