@@ -5,20 +5,29 @@ namespace FWO.EventSourcing.Core.Domain
     public abstract class AggregateRoot
     {
         protected string _id;
-        private readonly List<BaseEvent> _changes = new();
+
+        private readonly List<BaseEvent> _appliedChanges = new();
+        private readonly List<BaseEvent> _uncommitedChanges = new();
 
         public string Id { get => _id; }
 
-        public int Version { get; set; } = -1;
+        public int Version { get; private set; } = -1;
 
         public IEnumerable<BaseEvent> GetUncommittedChanges()
         {
-            return _changes;
+            return _uncommitedChanges;
         }
 
-        public void MarkChangesAsCommitted()
+        public IEnumerable<BaseEvent> GetAppliedChanges()
         {
-            _changes.Clear();
+            return _appliedChanges;
+        }
+
+        public void CommitChanges()
+        {
+            Version += _uncommitedChanges.Count();
+            _appliedChanges.AddRange(_uncommitedChanges);
+            _uncommitedChanges.Clear();
         }
 
         private void ApplyChange(BaseEvent @event, bool isNew)
@@ -32,9 +41,9 @@ namespace FWO.EventSourcing.Core.Domain
 
             method.Invoke(this, new object[] { @event });
             if (isNew)
-            {
-                _changes.Add(@event);
-            }
+                _uncommitedChanges.Add(@event);
+            else
+                Version++;
         }
 
         protected void RaiseEvent(BaseEvent @event)
@@ -42,10 +51,13 @@ namespace FWO.EventSourcing.Core.Domain
             ApplyChange(@event, true);
         }
 
-        public void ReplayEvents(IEnumerable<BaseEvent> events)
+        public void LoadEvents(IEnumerable<BaseEvent> events, string aggregateId)
         {
+            _id = aggregateId;
+            Version = -1;
             foreach (var @event in events)
             {
+                _appliedChanges.Add(@event);
                 ApplyChange(@event, false);
             }
         }

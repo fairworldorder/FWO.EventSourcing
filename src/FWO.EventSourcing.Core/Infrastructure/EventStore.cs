@@ -7,10 +7,12 @@ namespace FWO.EventSourcing.Core.Infrastructure
     public class EventStore : IEventStore
     {
         private IEventStoreRepository _repository;
+        private IEventResolver _eventResolver;
 
-        public EventStore(IEventStoreRepository repository)
+        public EventStore(IEventStoreRepository repository, IEventResolver eventResolver)
         {
             _repository = repository;
+            _eventResolver = eventResolver;
         }
 
         public async Task<List<BaseEvent>> LoadEventsAsync(string aggregateId)
@@ -19,7 +21,9 @@ namespace FWO.EventSourcing.Core.Infrastructure
             if (eventStream == null || !eventStream.Any())
                 throw new AggregateNotFoundException($"PostId {aggregateId} not found");
 
-            return eventStream.OrderBy(x => x.Version).Select(x => x.EventData).ToList();
+            // Resolve the EventData within each EventModel to a derived BaseEvent type.
+            var events = _eventResolver.ResolveEvents(eventStream.OrderBy(x => x.Version).ToList());
+            return events;
         }
 
         public async Task SaveEventAsync(string aggregateId, string aggregateType, IEnumerable<BaseEvent> events, int expectedVersion)
@@ -35,11 +39,11 @@ namespace FWO.EventSourcing.Core.Infrastructure
             foreach (var @event in events)
             {
                 version++;
-                @event.Version = version;
+                //@event.Version = version;
                 var eventType = @event.GetType().Name;
                 var eventModel = new EventModel
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = $"{aggregateId}_{version}",
                     Timestamp = DateTime.UtcNow,
                     AggregateId = aggregateId,
                     AggregateType = aggregateType,
