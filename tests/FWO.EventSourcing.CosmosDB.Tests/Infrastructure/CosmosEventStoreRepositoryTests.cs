@@ -48,7 +48,7 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
             var sut = _builder.Build();
             var eventModels = _eventModelListBuilder.SetDefault().Build();
 
-            foreach(var eventModel in eventModels)
+            foreach (var eventModel in eventModels)
             {
                 await sut.SaveAsync(eventModel);
             }

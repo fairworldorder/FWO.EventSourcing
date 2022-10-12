@@ -13,7 +13,6 @@ namespace FWO.EventSourcing.CosmosDB.Tests.TestHelpers
         private string _containerName;
         private string _partitionKeyPath;
 
-
         public CosmosServiceBuilder()
         {
             // default test is run against cosmos emulator

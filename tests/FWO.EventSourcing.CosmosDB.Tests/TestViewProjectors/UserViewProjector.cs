@@ -1,5 +1,4 @@
-﻿using FWO.EventSourcing.Core.Domain;
-using FWO.EventSourcing.Core.Infrastructure;
+﻿using FWO.EventSourcing.Core.Infrastructure;
 using FWO.EventSourcing.CosmosDB.Tests.TestAggregates;
 using FWO.EventSourcing.CosmosDB.Tests.TestEvents;
 using Xunit;
@@ -20,7 +19,6 @@ namespace FWO.EventSourcing.CosmosDB.Tests.TestViewProjectors
             aggregate.CommitChanges();
 
             var view = sut.ProjectView<UserView>(aggregate);
-
         }
     }
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 
 namespace FWO.EventSourcing.CosmosDB.Infrastructure
 {
@@ -14,6 +9,7 @@ namespace FWO.EventSourcing.CosmosDB.Infrastructure
         ICosmosService SetContainer(string containerName);
 
         Task<ItemResponse<T>> InsertDocumentAsync<T>(string partitionKey, T value, CancellationToken ct = default);
+
         Task<ItemResponse<T>> UpsertDocumentAsync<T>(string partitionKey, T value, CancellationToken ct = default);
 
         Task<List<T>> QueryItemsAsync<T>(string query, CancellationToken ct = default);

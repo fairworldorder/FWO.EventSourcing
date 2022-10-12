@@ -3,7 +3,6 @@ using FWO.EventSourcing.Core.Infrastructure;
 using FWO.EventSourcing.CosmosDB.Infrastructure;
 using FWO.EventSourcing.CosmosDB.Options;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using WebApi.Example.Todo.Aggregates;
 using WebApi.Example.Todo.EventResolvers;
@@ -49,7 +48,6 @@ namespace WebApi.Example
             // View projectors
             builder.Services.AddScoped<IViewProjector, AllTodosViewProjector>();
 
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -62,7 +60,6 @@ namespace WebApi.Example
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

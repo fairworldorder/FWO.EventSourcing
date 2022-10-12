@@ -44,15 +44,13 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
             var sut = _eventStoreBuilder.Build();
             var aggregateId = default(Guid).ToString();
             var events = _eventListBuilder
-                .AddStartedEvent("John", "Doe", new DateTime(2000,1,1,0,0,0,DateTimeKind.Utc))
+                .AddStartedEvent("John", "Doe", new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc))
                 .AddModifiedEvent("Joe", "Schmoe")
                 .Build();
 
             await sut.SaveEventAsync(aggregateId, "TestAggregate", events, -1);
 
             var newEvents = _eventListBuilder.Clear().AddModifiedEvent("Jane", "Doe").Build();
-
-            
 
             var exception = await Record.ExceptionAsync(async () =>
             {
@@ -82,12 +80,10 @@ namespace FWO.EventSourcing.CosmosDB.Tests.Infrastructure
 
             var exception = await Assert.ThrowsAsync<ConcurrencyException>(() => sut.SaveEventAsync(aggregateId, "TestAggregate", newEvents, 99));
 
-
             // Assert
 
             Assert.NotNull(exception);
         }
-
 
         public void Dispose()
         {
