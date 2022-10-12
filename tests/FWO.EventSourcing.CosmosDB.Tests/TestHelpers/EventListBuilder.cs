@@ -39,6 +39,7 @@ namespace FWO.EventSourcing.CosmosDB.Tests.TestHelpers
 
             return this;
         }
+
         public EventListBuilder Clear()
         {
             _events = new List<BaseEvent>();

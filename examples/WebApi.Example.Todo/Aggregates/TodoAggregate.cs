@@ -37,7 +37,7 @@ namespace WebApi.Example.Todo.Aggregates
 
         public void UpdateTodo(string todoId, string todoData, bool todoActive, DateTime updateDate)
         {
-            if(!_todoIds.Contains(todoId))
+            if (!_todoIds.Contains(todoId))
                 throw new InvalidOperationException("Invalid Todo Id.");
 
             RaiseEvent(new TodoUpdated
@@ -56,7 +56,7 @@ namespace WebApi.Example.Todo.Aggregates
 
             RaiseEvent(new TodoDeleted
             {
-                Id= todoId
+                Id = todoId
             });
         }
 
