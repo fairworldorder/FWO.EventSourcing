@@ -82,5 +82,25 @@ namespace WebApi.Example.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{userId}/{todoId}")]
+        public async Task<IActionResult> DeleteTodo([FromRoute] string userId, [FromRoute] string todoId)
+        {
+            TodoAggregate aggregate;
+            try
+            {
+                aggregate = await _eventSourcingHandler.LoadAggregateByIdAsync(userId);
+                aggregate.DeleteTodo(todoId);
+                await _eventSourcingHandler.SaveAsync(aggregate);
+            }
+            catch (Exception ex) when (ex is AggregateException
+                                          or AggregateNotFoundException
+                                          or InvalidOperationException)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
     }
 }
