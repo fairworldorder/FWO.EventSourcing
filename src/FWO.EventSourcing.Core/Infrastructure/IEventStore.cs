@@ -10,6 +10,9 @@ namespace FWO.EventSourcing.Core.Infrastructure
     {
         Task<List<BaseEvent>> LoadEventsAsync(string aggregateId);
 
-        Task SaveEventAsync(string aggregateId, string aggregateType, IEnumerable<BaseEvent> events, int expectedVersion);
+        Task SaveEventAsync(string aggregateId,
+                            string aggregateType,
+                            IEnumerable<BaseEvent> events,
+                            int expectedVersion);
     }
 }
