@@ -63,7 +63,7 @@ namespace WebApi.Example.Controllers
             }
         }
 
-        [HttpPost("{userId}/{todoId}")]
+        [HttpPut("{userId}/{todoId}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] string userId, [FromRoute] string todoId, [FromBody] UpdateTodoRequest request)
         {
             TodoAggregate aggregate;
